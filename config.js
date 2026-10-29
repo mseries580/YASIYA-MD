@@ -1,14 +1,28 @@
-const fs = require('fs');
-if (fs.existsSync('config.env')) require('dotenv').config({
-    path: './config.env'
-});
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-function convertToBool(text, fault = 'true') {
-    return text === fault ? true : false;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const envPath = path.join(__dirname, '..', 'config.env');
+
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+} else {
+    dotenv.config();
 }
 
-module.exports = {
-    SESSION_ID: process.env.SESSION_ID || 'Enter Your Session ID.',
-    PORT: process.env.PORT || 8000,
-    SESSION_NAME: process.env.SESSION_NAME || "auth_info_baileys"
+function convertToBool(text, fault = 'true') {
+    return text === fault;
+}
+
+const config = {
+    SESSION_ID: process.env.SESSION_ID || '',
+    PORT: Number(process.env.PORT) || 8000,
+    SESSION_NAME: process.env.SESSION_NAME || 'auth_info_baileys'
 };
+
+export { convertToBool };
+export default config;
